@@ -32,13 +32,12 @@ class ENC1(HeaderBasedVersion):
             "9": "9",
             "g": " ",
         }
-        offset_and_key = line[8:33]
-        offset_and_key = "".join([caesar[c] for c in offset_and_key.decode("utf-8")])
-        line = line[:8] + offset_and_key.encode("utf-8")
+        offset_and_key = line[8:33].decode("utf-8")
+        offset_and_key = "".join([caesar[c] for c in offset_and_key])
 
-        parts = line.split()
-        offset = int(parts[1], 16)
-        key = int(parts[2], 16)
+        parts = offset_and_key.split()
+        offset = int(parts[0], 16)
+        key = int(parts[1], 16)
         return offset, key
 
 
