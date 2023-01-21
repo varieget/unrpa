@@ -29,9 +29,11 @@ class UnknownArchiveError(UnRPAError):
         self.header = header
         decoded = header.decode("utf-8", "replace")
         super().__init__(
-            "Auto-detection of the version for this archived failed—it is likely this archive is a version not "
-            "supported. Try updating unrpa, or submitting a request for support at "
-            "https://github.com/Lattyware/unrpa/issues/new?template=new-archive-version.md"
+            # "Auto-detection of the version for this archived failed—it is likely this archive is a version not "
+            # "supported. Try updating unrpa, or submitting a request for support at "
+            # "https://github.com/Lattyware/unrpa/issues/new?template=new-archive-version.md"
+            "无法自动检测此 RPA 的版本，尝试更新 unrpa 或者提出一个 issue 于"
+            " https://github.com/varieget/unrpa/issues \n"
             f"Header: “{decoded.strip()}”",
             "You can try using --force to force a specific version rather than relying on auto-detection.",
         )
