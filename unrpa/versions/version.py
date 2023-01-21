@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
-from typing import Tuple, Optional, BinaryIO
+from typing import Tuple, Optional, BinaryIO, Dict
 
 from unrpa.view import ArchiveView
+from unrpa.utils import Utils, IndexEntry, ComplexIndexEntry
 
 
 class Version(metaclass=ABCMeta):
@@ -23,6 +24,13 @@ class Version(metaclass=ABCMeta):
         """Allows postprocessing over the data extracted from the archive."""
         for segment in iter(source.read1, b""):
             sink.write(segment)
+
+    def deobfuscate_index(
+        self, key: int, index: Dict[bytes, IndexEntry]
+    ) -> Dict[bytes, ComplexIndexEntry]:
+        return {
+            path: Utils.deobfuscate_entry(key, entry) for path, entry in index.items()
+        }
 
     def __str__(self) -> str:
         return self.name

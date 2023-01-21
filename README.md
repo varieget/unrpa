@@ -39,10 +39,11 @@ RPA-1.0, RPA-2.0, RPA-3.0, ALT-1.0, ZiX-12A, ZiX-12B, RPA-3.2, RPA-4.0
 
 #### 额外支持
 
-| 游戏名         |                          | RPA Header                          |
-| -------------- | ------------------------ | ----------------------------------- |
-| 厷雏           | GrandNesting-demo-1.0-pc | `ENC-1.0 cccccccccc81e99egdededede` |
-| 罗曼圣诞探案集 | Romans Christmas         | `PLZ-3.0 0000000000db034b 42424242` |
+| 游戏名         |                           | RPA Header                          |
+| -------------- | ------------------------- | ----------------------------------- |
+| 厷雏           | GrandNesting-demo-1.0-pc  | `ENC-1.0 cccccccccc81e99egdededede` |
+| 罗曼圣诞探案集 | Romans Christmas          | `PLZ-3.0 0000000000db034b 42424242` |
+| 煦风新笺       | Once Upon a Breeze (Demo) | `TMOZ-02 00000000000552ae 746d6f7a` |
 
 ## Command line usage
 

@@ -10,7 +10,6 @@ from typing import (
     Tuple,
     Optional,
     Dict,
-    cast,
     Iterable,
     Type,
     BinaryIO,
@@ -24,18 +23,10 @@ from unrpa.errors import (
     AmbiguousArchiveError,
     UnknownArchiveError,
 )
-from unrpa.versions import official_rpa, alt, zix, unofficial_rpa, enc, plz
+from unrpa.versions import official_rpa, alt, zix, unofficial_rpa, enc, plz, tmoz
 from unrpa.versions.version import Version
 from unrpa.view import ArchiveView
-
-# Offset, Length
-SimpleIndexPart = Tuple[int, int]
-SimpleIndexEntry = Iterable[SimpleIndexPart]
-# Offset, Length, Prefix
-ComplexIndexPart = Tuple[int, int, bytes]
-ComplexIndexEntry = Iterable[ComplexIndexPart]
-IndexPart = Union[SimpleIndexPart, ComplexIndexPart]
-IndexEntry = Iterable[IndexPart]
+from unrpa.utils import Utils, ComplexIndexEntry, IndexEntry
 
 
 class TreeNode:
@@ -75,6 +66,7 @@ class UnRPA:
         *unofficial_rpa.versions,
         *enc.versions,
         *plz.versions,
+        *tmoz.versions,
     )
 
     provided_versions: FrozenSet[Type[Version]] = frozenset(ordered_versions)
@@ -219,9 +211,9 @@ class UnRPA:
             zlib.decompress(archive.read()), encoding="bytes"
         )
         if key is not None:
-            normal_index = UnRPA.deobfuscate_index(key, index)
+            normal_index = version.deobfuscate_index(key, index)
         else:
-            normal_index = UnRPA.normalise_index(index)
+            normal_index = Utils.normalise_index(index)
 
         return {
             UnRPA.ensure_str_path(path).replace("/", os.sep): data
@@ -247,33 +239,3 @@ class UnRPA:
             return path
         else:
             return path.decode("utf-8", "replace")
-
-    @staticmethod
-    def deobfuscate_index(
-        key: int, index: Dict[bytes, IndexEntry]
-    ) -> Dict[bytes, ComplexIndexEntry]:
-        return {
-            path: UnRPA.deobfuscate_entry(key, entry) for path, entry in index.items()
-        }
-
-    @staticmethod
-    def deobfuscate_entry(key: int, entry: IndexEntry) -> ComplexIndexEntry:
-        return [
-            (offset ^ key, length ^ key, start)
-            for offset, length, start in UnRPA.normalise_entry(entry)
-        ]
-
-    @staticmethod
-    def normalise_index(
-        index: Dict[bytes, IndexEntry]
-    ) -> Dict[bytes, ComplexIndexEntry]:
-        return {path: UnRPA.normalise_entry(entry) for path, entry in index.items()}
-
-    @staticmethod
-    def normalise_entry(entry: IndexEntry) -> ComplexIndexEntry:
-        return [
-            (*cast(SimpleIndexPart, part), b"")
-            if len(part) == 2
-            else cast(ComplexIndexPart, part)
-            for part in entry
-        ]
