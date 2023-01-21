@@ -1,0 +1,16 @@
+name: Auto Comment
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  auto-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: wow-actions/auto-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          issuesOpened: |
+            👋 Hi @{{ author }}, 感谢提出 issue。
+            💡 提示：提供尽可能多的描述信息可以便于快速确定问题。
